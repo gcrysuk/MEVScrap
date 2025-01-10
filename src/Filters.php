@@ -20,4 +20,3 @@ class Filters
         return $filters;
     }
 }
-
