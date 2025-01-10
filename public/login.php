@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strpos($loginResponse, 'Bienvenido') !== false) {
         echo "Login exitoso";
     } else {
-        echo "Error en el login.";
+        echo "Error en el login. Respuesta del servidor: <br>";
+        echo htmlspecialchars($loginResponse);
     }
 }
 ?>

@@ -41,8 +41,13 @@ class Scraper
         curl_setopt($ch, CURLOPT_USERAGENT, $this->config['user_agent']);
 
         $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+        echo 'Error: ' . curl_error($ch);
+        }
         curl_close($ch);
 
-        return $response;
+        file_put_contents(__DIR__ . '/../storage/login_response.html', $response);
+
+    return $response;
     }
 }
