@@ -22,8 +22,8 @@ class Scraper
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->config['user_agent']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->config['user_agent']);
 
         $response = curl_exec($ch);
         curl_close($ch);
@@ -31,7 +31,7 @@ class Scraper
         return $response;
     }
 
-    public function getDepartmentsAndOrganisms()
+    public function getOptions()
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->config['filter_url']);
@@ -42,53 +42,42 @@ class Scraper
         $response = curl_exec($ch);
         curl_close($ch);
 
-        // Parse the response to extract department and organism options
-        $departments = []; // Extract department values
-        $organisms = [];   // Extract organism values
-
         $dom = new DOMDocument();
         @$dom->loadHTML($response);
         $xpath = new DOMXPath($dom);
 
-        // Example XPath queries to extract dropdown options
-        $departmentOptions = $xpath->query('//select[@name="DtoJudElegido"]/option');
-        foreach ($departmentOptions as $option) {
-            $departments[$option->getAttribute('value')] = $option->nodeValue;
+        $departments = [];
+        $departmentNodes = $xpath->query('//select[@name="DtoJudElegido"]/option');
+        foreach ($departmentNodes as $node) {
+            $departments[$node->getAttribute('value')] = $node->nodeValue;
         }
 
-        // Modify this query for organism options as necessary
-        $organismOptions = $xpath->query('//select[@name="organism_select"]/option');
-        foreach ($organismOptions as $option) {
-            $organisms[$option->getAttribute('value')] = $option->nodeValue;
-        }
-
-        return ['departments' => $departments, 'organisms' => $organisms];
+        return $departments;
     }
 
     public function fetchData($filters)
     {
+        $departments = $this->getOptions();
         $results = [];
-        $options = $this->getDepartmentsAndOrganisms();
 
-        foreach ($options['departments'] as $departmentId => $departmentName) {
-            foreach ($options['organisms'] as $organismId => $organismName) {
-                $filters['DtoJudElegido'] = $departmentId;
-                $filters['organism'] = $organismId;
+        foreach ($departments as $departmentId => $departmentName) {
+            $filters['DtoJudElegido'] = $departmentId;
 
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $this->config['filter_url']);
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($filters));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
-                curl_setopt($ch, CURLOPT_USERAGENT, $this->config['user_agent']);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->config['filter_url']);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($filters));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
+            curl_setopt($ch, CURLOPT_USERAGENT, $this->config['user_agent']);
 
-                $response = curl_exec($ch);
-                curl_close($ch);
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-                // Aggregate results
-                $results[] = $response;
-            }
+            $results[] = [
+                'department' => $departmentName,
+                'response' => $response
+            ];
         }
 
         return $results;

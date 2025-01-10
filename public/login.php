@@ -10,11 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $loginResponse = $scraper->login($username, $password);
 
-    if (strpos($loginResponse, 'Bienvenido') !== false) {
-        echo "Login exitoso";
+    if (strpos($loginResponse, 'UsuarioMEV') !== false) {
+        echo "Login exitoso. <a href='search.php'>Ir a Búsquedas</a>";
     } else {
-        echo "Error en el login. Respuesta del servidor: <br>";
-        echo htmlspecialchars($loginResponse);
+        echo "Error en el login. Revisa tus credenciales.";
     }
 }
 ?>
@@ -22,15 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Iniciar Sesión</title>
 </head>
 <body>
     <h1>Iniciar Sesión</h1>
     <form method="POST" action="">
         <label for="username">Usuario:</label>
         <input type="text" id="username" name="username" required><br>
+
         <label for="password">Contraseña:</label>
         <input type="password" id="password" name="password" required><br>
+
         <button type="submit">Ingresar</button>
     </form>
 </body>
