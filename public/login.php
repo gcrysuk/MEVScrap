@@ -34,17 +34,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </body>
 </html>
-```
-
-#### 4. `public/index.php`
-```php
-<?php
-require_once __DIR__ . '/../src/Scraper.php';
-
-$config = require __DIR__ . '/../config/config.php';
-$scraper = new Scraper($config);
-
-$data = $scraper->fetchData($config['data_url']);
-
-echo $data;
-?>
