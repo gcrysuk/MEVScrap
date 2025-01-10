@@ -1,5 +1,3 @@
-#### 4. `public/index.php`
-```php
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,4 +13,4 @@
     </ul>
 </body>
 </html>
-```
+

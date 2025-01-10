@@ -1,5 +1,3 @@
-#### 4. `public/search.php`
-```php
 <?php
 require_once __DIR__ . '/../src/Scraper.php';
 require_once __DIR__ . '/../src/Filters.php';
@@ -42,4 +40,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </body>
 </html>
-```

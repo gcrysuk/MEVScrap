@@ -1,5 +1,3 @@
-#### 3. `src/Filters.php`
-```php
 <?php
 class Filters
 {
@@ -22,4 +20,4 @@ class Filters
         return $filters;
     }
 }
-```
+

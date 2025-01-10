@@ -1,5 +1,3 @@
-#### 2. `src/Scraper.php`
-```php
 <?php
 class Scraper
 {
@@ -48,4 +46,3 @@ class Scraper
         return $response;
     }
 }
-```
